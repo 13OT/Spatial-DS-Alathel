@@ -337,9 +337,10 @@ class DrawGeoJson(object):
                 return(country)
 
     def thickborders(self, country, mousepos):
-        xs = []
-        ys = []
+
         if country in self.adjusted_poly_dict:
+            xs = []
+            ys = []
             pygame.draw.polygon(self.screen, self.colors.get_rgb(
                 'black'), self.adjusted_poly_dict[country], 5)
             myfont = pygame.font.SysFont('Comic Sans MS', 18)
@@ -368,9 +369,9 @@ class DrawGeoJson(object):
         """
 
         for poly in self.polygons:
-            adjusted=[]
+            adjusted = []
             for p in poly:
-                x, y=p
+                x, y = p
                 adjusted.append(self.convertGeoToPixel(x, y))
             # New added June 13
             self.adjusted_polys.append(adjusted)
@@ -388,12 +389,11 @@ class DrawGeoJson(object):
         Returns:
             None
         """
-        self.mapLonLeft=min(self.all_lons)
-        self.mapLonRight=max(self.all_lons)
-        self.mapLonDelta=self.mapLonRight - self.mapLonLeft
-        self.mapLatBottom=min(self.all_lats)
-        self.mapLatBottomDegree=self.mapLatBottom * math.pi / 180.0
-
+        self.mapLonLeft = min(self.all_lons)
+        self.mapLonRight = max(self.all_lons)
+        self.mapLonDelta = self.mapLonRight - self.mapLonLeft
+        self.mapLatBottom = min(self.all_lats)
+        self.mapLatBottomDegree = self.mapLatBottom * math.pi / 180.0
 
     def __str__(self):
         return "[%d,%d,%d,%d,%d,%d,%d]" % (self.mapWidth, self.mapHeight, self.mapLonLeft, self.mapLonRight, self.mapLonDelta, self.mapLatBottom, self.mapLatBottomDegree)
@@ -409,11 +409,11 @@ class DrawingFacade(object):
         more other classes. This 'facade' lets us interface with the 3 classes instantiated
         below.
         """
-        self.sb=StateBorders(
+        self.sb = StateBorders(
             'C:/Users/Aalat/Documents/4553-Spatial-DS/Resources/Json_Files/state_borders.json')
-        self.wc=WorldCountries(
+        self.wc = WorldCountries(
             'C:/Users/Aalat/Documents/4553-Spatial-DS/Resources/Json_Files/countries.geo.json')
-        self.gd=DrawGeoJson(screen, width, height)
+        self.gd = DrawGeoJson(screen, width, height)
 
     def add_polygons(self, ids):
         """
@@ -448,61 +448,62 @@ class DrawingFacade(object):
             self.gd.add_polygon(poly, id)
 
 
-
 def point_inside_polygon(x, y, poly):
     """
     determine if a point is inside a given polygon or not
     Polygon is a list of (x,y) pairs.
     http://www.ariel.com.au/a/python-point-int-poly.html
     """
-    n=len(poly)
-    inside=False
+    n = len(poly)
+    inside = False
 
-    p1x, p1y=poly[0]
+    p1x, p1y = poly[0]
     for i in range(n + 1):
-        p2x, p2y=poly[i % n]
+        p2x, p2y = poly[i % n]
         if y > min(p1y, p2y):
             if y <= max(p1y, p2y):
                 if x <= max(p1x, p2x):
                     if p1y != p2y:
-                        xinters=(y - p1y) * (p2x - p1x) / (p2y - p1y) + p1x
+                        xinters = (y - p1y) * (p2x - p1x) / (p2y - p1y) + p1x
                     if p1x == p2x or x <= xinters:
-                        inside=not inside
-        p1x, p1y=p2x, p2y
+                        inside = not inside
+        p1x, p1y = p2x, p2y
 
     return inside
 
 #####################################################################################
 #####################################################################################
 
+
 def mercator_projection(latlng, zoom=0, tile_size=256):
     """
     ******NOT USED******
     The mapping between latitude, longitude and pixels is defined by the web mercator projection.
     """
-    x=(latlng[0] + 180) / 360 * tile_size
-    y=((1 - math.log(math.tan(latlng[1] * math.pi / 180) + 1 / math.cos(
+    x = (latlng[0] + 180) / 360 * tile_size
+    y = ((1 - math.log(math.tan(latlng[1] * math.pi / 180) + 1 / math.cos(
         latlng[1] * math.pi / 180)) / math.pi) / 2 * pow(2, 0)) * tile_size
 
     return (x, y)
+
 
 if __name__ == '__main__':
 
     # if there are no command line args
     if len(sys.argv) == 1:
-        width=1024    # define width and height of screen
-        height=512
+        width = 1024    # define width and height of screen
+        height = 512
     else:
         # use size passed in by user
-        width=int(sys.argv[1])
-        height=int(sys.argv[2])
+        width = int(sys.argv[1])
+        height = int(sys.argv[2])
 
     # create an instance of pygame
     # "screen" is what will be used as a reference so we can
     # pass it to functions and draw to it.
     pygame.font.init()  # you have to call this at the start,
-                   # if you want to use this module.
-    screen=pygame.display.set_mode((width, height))
+    # if you want to use this module.
+    screen = pygame.display.set_mode((width, height))
 
     # Set title of window
     pygame.display.set_caption('Draw World Polygons')
@@ -514,8 +515,8 @@ if __name__ == '__main__':
     pygame.display.flip()
 
     # Instances of our drawing classes
-    gd=DrawGeoJson(screen, width, height)
-    df=DrawingFacade(width, height)
+    gd = DrawGeoJson(screen, width, height)
+    df = DrawingFacade(width, height)
 
     print(gd.__dict__)
 
@@ -523,8 +524,7 @@ if __name__ == '__main__':
     # df.add_polygons(['FRA','TX','ESP','AFG','NY'])
     # df.add_polygons(['TX','NY','ME','Kenya'])
     df.add_polygons(['TX', 'Spain', 'France', 'Belgium', 'Italy', 'Ireland',
-                    'Scotland', 'Greece', 'Germany', 'Egypt', 'Morocco', 'India'])
-
+                     'Scotland', 'Greece', 'Germany', 'Egypt', 'Morocco', 'India'])
 
     # Call draw polygons to "adjust" the regular polygons
     gd.draw_polygons()
@@ -532,15 +532,13 @@ if __name__ == '__main__':
     gd.adjust_poly_dictionary()
 
     # Main loop
-    running=True
+    running = True
     while running:
         gd.draw_polygons()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running=False
+                running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                temp=gd.click(event.pos)
-                print(temp)
-                gd.thickborders(temp, event.pos)
+                gd.thickborders(gd.click(event.pos), event.pos)
             else:
                 pygame.display.flip()
