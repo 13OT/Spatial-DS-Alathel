@@ -325,7 +325,12 @@ class DrawGeoJson(object):
             pygame.draw.polygon(self.screen, self.colors.get_rgb('black'), self.adjusted_poly_dict[country], 4)
             myfont = pygame.font.SysFont('Comic Sans MS', 24)
             text = myfont.render(country, True, (0,0,0))
-            self.screen.blit(text, (mousepos[0], mousepos[1]))
+            self.screen.blit(text, (mousepos[0]-20, mousepos[1]-90))
+            from operator import itemgetter
+            start =(min(self.adjusted_poly_dict[country])[0],min(self.adjusted_poly_dict[country])[1])
+            width = max(self.adjusted_poly_dict[country][0])-min(self.adjusted_poly_dict[country])[0]
+            height =max(self.adjusted_poly_dict[country][1])-min(self.adjusted_poly_dict[country])[1]
+            pygame.draw.rect(self.screen,self.colors.get_rgb('black'),[start[0],start[1],width,height],2)
 
 
         else:
@@ -511,6 +516,5 @@ if __name__ == '__main__':
                 temp = gd.click(event.pos)
                 print(temp)
                 gd.thickborders(temp,event.pos)
-
-
-            pygame.display.flip()
+            else:
+                pygame.display.flip()
