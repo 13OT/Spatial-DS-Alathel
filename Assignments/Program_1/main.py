@@ -1,3 +1,7 @@
+# Abdullah Alathel
+# CMPS 4553 Spatial Databases
+# Professor. Terry Griffin
+# 06/14/2017
 import json
 import os
 import sys
@@ -8,8 +12,6 @@ import pprint as pp
 from operator import itemgetter
 
 
-# Get current working path
-DIRPATH = os.path.dirname(os.path.realpath(__file__))
 
 #####################################################################################
 #####################################################################################
