@@ -320,7 +320,6 @@ class DrawGeoJson(object):
         # pp.pprint(self.adjusted_poly_dict)
         for country, polys in self.adjusted_poly_dict.items():
             new_polys = []
-            print(country)
             for poly in polys:
                 new_poly = []
                 for p in poly:
@@ -328,6 +327,9 @@ class DrawGeoJson(object):
                     new_poly.append(self.convertGeoToPixel(x, y))
                 new_polys.extend(new_poly)
             self.adjusted_poly_dict[country] = new_polys
+            self.adjusted_polys.append(dict({country: new_polys}))
+        for i in range(len(self.adjusted_polys)):
+            self.adjusted_polys[i]['color'] = self.colors.get_random_color()
 
     def click(self, mousepos):
         for country in self.adjusted_poly_dict.keys():
@@ -342,10 +344,10 @@ class DrawGeoJson(object):
             xs = []
             ys = []
             pygame.draw.polygon(self.screen, self.colors.get_rgb(
-                'black'), self.adjusted_poly_dict[country], 5)
+                'red'), self.adjusted_poly_dict[country], 5)
             myfont = pygame.font.SysFont('Comic Sans MS', 18)
             text = myfont.render(country, True, (0, 0, 0))
-            self.screen.blit(text, (mousepos[0] - 20, mousepos[1] - 90))
+            self.screen.blit(text, (self.mapWidth-150, 60))
             for x, y in self.adjusted_poly_dict[country]:
                 xs.append(x)
                 ys.append(y)
@@ -368,15 +370,15 @@ class DrawGeoJson(object):
             None
         """
 
+        i = 0
         for poly in self.polygons:
             adjusted = []
             for p in poly:
                 x, y = p
                 adjusted.append(self.convertGeoToPixel(x, y))
-            # New added June 13
-            self.adjusted_polys.append(adjusted)
+            i += 1
             pygame.draw.polygon(
-                self.screen, self.colors.get_random_color(), adjusted, 0)
+                self.screen, self.adjusted_polys[i % len(self.adjusted_polys)]['color'], adjusted, 0)
 
     def __update_bounds(self):
         """
@@ -518,18 +520,23 @@ if __name__ == '__main__':
     gd = DrawGeoJson(screen, width, height)
     df = DrawingFacade(width, height)
 
-    print(gd.__dict__)
+   # print(gd.__dict__)
 
     # Add countries and states to our drawing facade.
     # df.add_polygons(['FRA','TX','ESP','AFG','NY'])
     # df.add_polygons(['TX','NY','ME','Kenya'])
-    df.add_polygons(['TX', 'Spain', 'France', 'Belgium', 'Italy', 'Ireland',
-                     'Scotland', 'Greece', 'Germany', 'Egypt', 'Morocco', 'India'])
+    df.add_polygons(['Spain', 'France', 'Belgium', 'Italy', 'Ireland',
+                     'Scotland', 'Greece', 'Germany', 'Egypt', 'Morocco',
+                     'India', "Uzbekistan", "Albania", 'Switzerland', 'Libya',
+                     'Algeria', 'Tunisia', 'Portugal', 'Austria', 'Romania',
+                     'Ukraine', 'Poland', 'Belarus', 'Turkey', 'Syria', 'Israel',
+                     'Hungary', 'Slovakia', 'Czech Republic', 'Serbia', 'Bulgaria',
+                     'Moldova'])
+    gd.adjust_poly_dictionary()
 
     # Call draw polygons to "adjust" the regular polygons
     gd.draw_polygons()
     # Call my new method to "adjust" the dictionary of polygons
-    gd.adjust_poly_dictionary()
 
     # Main loop
     running = True
@@ -539,6 +546,8 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
+                pygame.draw.polygon(screen,(255,255,255), [(0,0),(width,0),(width,height),(0,height),(0,0)], 0)
+            if event.type == pygame.MOUSEBUTTONUP:
                 gd.thickborders(gd.click(event.pos), event.pos)
             else:
                 pygame.display.flip()
