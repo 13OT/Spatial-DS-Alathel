@@ -334,14 +334,21 @@ class DrawGeoJson(object):
             self.adjusted_polys[i]['color'] = self.colors.get_random_color()
 
     def click(self, mousepos):
+        """
+        returns country name if it is clicked
+        """
         for country in self.adjusted_poly_dict.keys():
             state = point_inside_polygon(
                 mousepos[0], mousepos[1], self.adjusted_poly_dict[country])
             if state:
                 return(country)
 
-    def thickborders(self, country, mousepos):
-
+    def thickborders(self, country):
+        """
+        highlights borders of selected country by drawing on it's borders,
+        prints name of selected country on top right corner,
+        draws a bounding box around selected country
+        """
         if country in self.adjusted_poly_dict:
             xs = []
             ys = []
@@ -360,7 +367,7 @@ class DrawGeoJson(object):
             pygame.draw.polygon(self.screen, self.colors.get_rgb(
                 'black'), [pt0, pt1, pt2, pt3], 2)
         else:
-            return"ERROR coudnt find country"
+            return"Error, coudnt find country"
 
     def draw_polygons(self):
         """
@@ -550,6 +557,6 @@ if __name__ == '__main__':
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pygame.draw.polygon(screen,(255,255,255), [(0,0),(width,0),(width,height),(0,height),(0,0)], 0)
             if event.type == pygame.MOUSEBUTTONUP:
-                gd.thickborders(gd.click(event.pos), event.pos)
+                gd.thickborders(gd.click(event.pos))
             else:
                 pygame.display.flip()
