@@ -330,6 +330,7 @@ class DrawGeoJson(object):
                 new_polys.extend(new_poly)
             self.adjusted_poly_dict[country] = new_polys
             self.adjusted_polys.append(dict({country: new_polys}))
+            print(new_polys)
         # assigns a random color to each country
         for i in range(len(self.adjusted_polys)):
             self.adjusted_polys[i]['color'] = self.colors.get_random_color()
