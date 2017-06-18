@@ -1,3 +1,7 @@
+# Abdullah Alathel
+# CMPS 4553 Spatial Databases
+# Professor. Terry Griffin
+# 06/19/2017
 import pygame
 import random
 import json
