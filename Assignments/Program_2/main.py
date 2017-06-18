@@ -2,39 +2,6 @@ import pygame
 import random
 import json
 
-def calculate_mbrs(points, epsilon, min_pts):
-    """
-    Find clusters using DBscan and then create a list of bounding rectangles
-    to return.
-    """
-    print("CLUSTERS< AHHHHHHHHHHHHHHHHHHHHHHH")
-    mbrs = []
-    #clusters = dbscan(points, epsilon, min_pts)
-
-    print("DONE WITH SCANS, calculating mbrs")
-
-    """
-    Traditional dictionary iteration to populate mbr list
-    Does same as below
-    """
-    # for id,cpoints in clusters.items():
-    #     xs = []
-    #     ys = []
-    #     for p in cpoints:
-    #         xs.append(p[0])
-    #         ys.append(p[1])
-    #     max_x = max(xs)
-    #     max_y = max(ys)
-    #     min_x = min(xs)
-    #     min_y = min(ys)
-    #     mbrs.append([(min_x,min_y),(max_x,min_y),(max_x,max_y),(min_x,max_y),(min_x,min_y)])
-    # return mbrs
-
-    """
-    Using list index value to iterate over the clusters dictionary
-    Does same as above
-    """
-
 
 
 def clean_area(screen,origin,width,height,color):
