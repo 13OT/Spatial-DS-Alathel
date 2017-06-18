@@ -6,10 +6,10 @@ import pygame
 import random
 import json
 import os
+import pprint as pp
 
-DIRPATH = os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                 '..', '..', '..', '4553-Spatial-DS', 'Resources'))
-
+DIRPATH = os.path.abspath (
+    os.path.join ( os.path.dirname ( __file__ ), '..', '..', '..', '4553-Spatial-DS', 'Resources' ) )
 
 def clean_area(screen, origin, width, height, color):
     """
@@ -17,22 +17,19 @@ def clean_area(screen, origin, width, height, color):
     Could be used to erase a small area, or the entire screen.
     """
     ox, oy = origin
-    points = [(ox, oy), (ox + width, oy), (ox + width,
-                                           oy + height), (ox, oy + height), (ox, oy)]
-    pygame.draw.polygon(screen, color, points, 0)
+    points = [(ox, oy), (ox + width, oy), (ox + width, oy + height), (ox, oy + height), (ox, oy)]
+    pygame.draw.polygon ( screen, color, points, 0 )
 
-
-class Colors (object):
+class Colors ( object ):
     """
     Opens a json file of web colors.
     """
 
     def __init__(self, file_name=DIRPATH + '/Json_Files/colors.json'):
+        with open ( file_name, 'r' ) as content_file:
+            content = content_file.read ()
 
-        with open(file_name, 'r') as content_file:
-            content = content_file.read()
-
-        self.content = json.loads(content)
+        self.content = json.loads ( content )
 
     def get_random_color(self):
         """
@@ -78,7 +75,10 @@ class Colors (object):
         return self.get_rgb(color_name)
 
 
-def scaled(crimes):
+def scaled(crimes,width,height):
+    """
+scale the x, y coordianets to the screen
+    """
     points = []
     for key in crimes.keys():
         points.extend(crimes[key]['location'])
@@ -89,49 +89,71 @@ def scaled(crimes):
     for key in crimes.keys():
         lst = []
         for i in crimes[key]['location']:
-            x = int(950 * ((i[0] - min_x) / ((max_x - min_x))))
-            y = int(515 * ((i[1] - min_y) / ((max_y - min_y))))
+            x = int(width * ((i[0] - min_x) / ((max_x - min_x))))
+            y = int(height * ((i[1] - min_y) / ((max_y - min_y))))
+            y=-y+920
             lst.append(tuple((x, y)))
         crimes[key]['location'] = lst
 
 
-color = Colors()
-keys = []
-crimes = {}
-crimes['random'] = {'location': [],
-                    'color': color.get_random_color(), 'mbrs': []}
-got_keys = False
-crime_locations = ['bronx', 'brooklyn', 'manhattan', 'queens', 'staten_island']
-for crime_place in crime_locations:
-    with open(DIRPATH + '/NYPD_CrimeData/filtered_crimes_' + crime_place + '.csv') as f:
-        for line in f:
-            line = ''.join(x if i % 2 == 0 else x.replace(',', ':')
-                           for i, x in enumerate(line.split('"')))
-            line = line.strip().split(',')
-            if not got_keys:
-                keys = line
-                print(keys)
-                got_keys = True
-                continue
 
-            for e in line:
-                if e == '':
-                    line.remove(e)
-            if isinstance(line[7], str):
-                if line[7] not in crimes:
-                    crimes[line[7]] = {
-                        'location': [], 'color': color.get_random_color(), 'mbrs': []}
+def read_crimes():
+    """
+read in the five files and store them in a dict (crimes)
+    """
+    crimes = {}
+    color = Colors()
+    got_keys = False
+    crime_locations = ['bronx', 'brooklyn', 'manhattan', 'queens', 'staten_island']
+    crimes['random'] = {'location': [],'color': color.get_random_color(), 'mbrs': []}
+
+    for crime_place in crime_locations:
+        with open(DIRPATH + '/NYPD_CrimeData/filtered_crimes_' + crime_place + '.csv') as f:
+            for line in f:
+                line = ''.join(x if i % 2 == 0 else x.replace(',', ':')
+                            for i, x in enumerate(line.split('"')))
+                line = line.strip().split(',')
+                if not got_keys:
+                    keys = line
+                    print(keys)
+                    got_keys = True
+                    continue
+
+                for e in line:
+                    if e == '':
+                        line.remove(e)
                 try:
-                    crimes[line[7]]['location'].append(
+                    temp=int(line[7])
+                    if line[9] not in crimes:
+                        crimes[line[9]] = {
+                            'location': [], 'color': color.get_random_color(), 'mbrs': []}
+                    try:
+                        crimes[line[9]]['location'].append(
+                            tuple((float(line[-5]), float(line[-4]))))
+                    except:
+                        continue
+                except:
+                    if line[7] not in crimes:
+                        crimes[line[7]] = {
+                            'location': [], 'color': color.get_random_color(), 'mbrs': []}
+                    try:
+                        crimes[line[7]]['location'].append(
+                            tuple((float(line[-5]), float(line[-4]))))
+                    except:
+                        continue
+                try:
+                    crimes['random']['location'].append(
                         tuple((float(line[-5]), float(line[-4]))))
                 except:
                     continue
-            try:
-                crimes['random']['location'].append(
-                    tuple((float(line[-5]), float(line[-4]))))
-            except:
-                continue
-scaled(crimes)
+    return crimes
+
+
+crimes = read_crimes()
+scaled(crimes,950,515)
+text=open(os.path.abspath(os.path.join(os.path.dirname ( __file__ ),'..','..','..','random','WHATEVER')),'w')
+pp.pprint(crimes['random'],text)
+text.close()
 background_colour = (255, 255, 255)
 black = (0, 0, 0)
 (width, height) = (1024, 900)
