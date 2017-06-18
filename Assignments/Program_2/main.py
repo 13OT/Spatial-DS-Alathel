@@ -5,8 +5,11 @@
 import pygame
 import random
 import json
+import os
 
-DIRPATH = 'C:/Users/Aalat/Documents/4553-Spatial-DS/Resources/'
+DIRPATH = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                 '..', '..', '..', '4553-Spatial-DS', 'Resources'))
+
 
 def clean_area(screen, origin, width, height, color):
     """
@@ -24,7 +27,7 @@ class Colors (object):
     Opens a json file of web colors.
     """
 
-    def __init__(self, file_name=DIRPATH + 'Json_Files/colors.json'):
+    def __init__(self, file_name=DIRPATH + '/Json_Files/colors.json'):
 
         with open(file_name, 'r') as content_file:
             content = content_file.read()
@@ -74,6 +77,7 @@ class Colors (object):
         """
         return self.get_rgb(color_name)
 
+
 def scaled(crimes):
     points = []
     for key in crimes.keys():
@@ -90,6 +94,7 @@ def scaled(crimes):
             lst.append(tuple((x, y)))
         crimes[key]['location'] = lst
 
+
 color = Colors()
 keys = []
 crimes = {}
@@ -98,7 +103,7 @@ crimes['random'] = {'location': [],
 got_keys = False
 crime_locations = ['bronx', 'brooklyn', 'manhattan', 'queens', 'staten_island']
 for crime_place in crime_locations:
-    with open(DIRPATH + 'NYPD_CrimeData/filtered_crimes_' + crime_place + '.csv') as f:
+    with open(DIRPATH + '/NYPD_CrimeData/filtered_crimes_' + crime_place + '.csv') as f:
         for line in f:
             line = ''.join(x if i % 2 == 0 else x.replace(',', ':')
                            for i, x in enumerate(line.split('"')))
