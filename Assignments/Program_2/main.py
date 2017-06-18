@@ -2,27 +2,30 @@ import pygame
 import random
 import json
 
+DIRPATH = 'C:/Users/Aalat/Documents/4553-Spatial-DS/Resources/'
 
-
-def clean_area(screen,origin,width,height,color):
+def clean_area(screen, origin, width, height, color):
     """
     Prints a color rectangle (typically white) to "erase" an area on the screen.
     Could be used to erase a small area, or the entire screen.
     """
-    ox,oy = origin
-    points = [(ox,oy),(ox+width,oy),(ox+width,oy+height),(ox,oy+height),(ox,oy)]
+    ox, oy = origin
+    points = [(ox, oy), (ox + width, oy), (ox + width,
+                                           oy + height), (ox, oy + height), (ox, oy)]
     pygame.draw.polygon(screen, color, points, 0)
-class Colors ( object ):
+
+
+class Colors (object):
     """
     Opens a json file of web colors.
     """
 
-    def __init__(self, file_name='C:/Users/Aalat/Documents/4553-Spatial-DS/Resources/Json_Files/colors.json'):
+    def __init__(self, file_name=DIRPATH + 'Json_Files/colors.json'):
 
-        with open ( file_name, 'r' ) as content_file:
-            content = content_file.read ()
+        with open(file_name, 'r') as content_file:
+            content = content_file.read()
 
-        self.content = json.loads ( content )
+        self.content = json.loads(content)
 
     def get_random_color(self):
         """
@@ -36,7 +39,7 @@ class Colors ( object ):
             some_color = c.get_random_color()
             # some_color is now a tuple (r,g,b) representing some lucky color
         """
-        r = random.randint ( 0, len ( self.content ) - 1 )
+        r = random.randint(0, len(self.content) - 1)
         c = self.content[r]
         return (c['rgb'][0], c['rgb'][1], c['rgb'][2])
 
@@ -65,72 +68,76 @@ class Colors ( object ):
             current_color = c['violet']
             # current_color contains: (238,130,238)
         """
-        return self.get_rgb ( color_name )
+        return self.get_rgb(color_name)
 
 def scaled(crimes):
-    points=[]
-    for key in crimes.keys ():
-        points.extend ( crimes[key]['location'] )
-    min_x = min ( points )[0]
-    max_x = max ( points )[0]
-    min_y = min ( points )[1]
-    max_y = max ( points )[1]
-    for key in crimes.keys ():
+    points = []
+    for key in crimes.keys():
+        points.extend(crimes[key]['location'])
+    min_x = min(points)[0]
+    max_x = max(points)[0]
+    min_y = min(points)[1]
+    max_y = max(points)[1]
+    for key in crimes.keys():
         lst = []
         for i in crimes[key]['location']:
-            x = int(950*((i[0]-min_x)/((max_x-min_x))))
-            y = int ( 515*((i[1] - min_y) / ((max_y - min_y))) )
-            lst.append(tuple((x,y)))
-        crimes[key]['location']=lst
-# Get current working path
-DIRPATH = 'C:/Users/Aalat/Documents/4553-Spatial-DS/Resources/NYPD_CrimeData/'
-color = Colors ()
+            x = int(950 * ((i[0] - min_x) / ((max_x - min_x))))
+            y = int(515 * ((i[1] - min_y) / ((max_y - min_y))))
+            lst.append(tuple((x, y)))
+        crimes[key]['location'] = lst
+
+color = Colors()
 keys = []
 crimes = {}
-crimes['random']={'location': [], 'color': color.get_random_color (), 'mbrs': []}
+crimes['random'] = {'location': [],
+                    'color': color.get_random_color(), 'mbrs': []}
 got_keys = False
-crime_locations=['bronx','brooklyn','manhattan','queens','staten_island']
+crime_locations = ['bronx', 'brooklyn', 'manhattan', 'queens', 'staten_island']
 for crime_place in crime_locations:
-    with open ( DIRPATH + 'filtered_crimes_'+crime_place+'.csv' ) as f:
+    with open(DIRPATH + 'NYPD_CrimeData/filtered_crimes_' + crime_place + '.csv') as f:
         for line in f:
-            line = ''.join ( x if i % 2 == 0 else x.replace ( ',', ':' ) for i, x in enumerate ( line.split ( '"' ) ) )
-            line = line.strip ().split ( ',' )
+            line = ''.join(x if i % 2 == 0 else x.replace(',', ':')
+                           for i, x in enumerate(line.split('"')))
+            line = line.strip().split(',')
             if not got_keys:
                 keys = line
-                print ( keys )
+                print(keys)
                 got_keys = True
                 continue
 
             for e in line:
-                if e =='':
+                if e == '':
                     line.remove(e)
-            if isinstance(line[7],str):
+            if isinstance(line[7], str):
                 if line[7] not in crimes:
-                    crimes[line[7]] = {'location': [], 'color': color.get_random_color (), 'mbrs': []}
+                    crimes[line[7]] = {
+                        'location': [], 'color': color.get_random_color(), 'mbrs': []}
                 try:
-                    crimes[line[7]]['location'].append ( tuple ( (float(line[-5]),float(line[-4]))))
+                    crimes[line[7]]['location'].append(
+                        tuple((float(line[-5]), float(line[-4]))))
                 except:
                     continue
             try:
-                crimes['random']['location'].append ( tuple ( (float ( line[-5] ), float ( line[-4] )) ) )
+                crimes['random']['location'].append(
+                    tuple((float(line[-5]), float(line[-4]))))
             except:
                 continue
 scaled(crimes)
 background_colour = (255, 255, 255)
 black = (0, 0, 0)
 (width, height) = (1024, 900)
-screen = pygame.display.set_mode ( (width, height) )
-pygame.display.set_caption ( 'New York Crimes' )
-screen.fill ( background_colour )
-pygame.display.flip ()
+screen = pygame.display.set_mode((width, height))
+pygame.display.set_caption('New York Crimes')
+screen.fill(background_colour)
+pygame.display.flip()
 running = True
 while running:
     for key in crimes.keys():
         for p in crimes[key]['location']:
-            pygame.draw.circle ( screen, crimes[key]['color'], p, 2, 0 )
-    for event in pygame.event.get ():
+            pygame.draw.circle(screen, crimes[key]['color'], p, 2, 0)
+    for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
-            clean_area ( screen, (0, 0), width, height, (255, 255, 255) )
-    pygame.display.flip ()
+            clean_area(screen, (0, 0), width, height, (255, 255, 255))
+    pygame.display.flip()
