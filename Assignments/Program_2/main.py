@@ -180,15 +180,15 @@ def read_crimes():
                     continue
     return crimes
 
-
+color=Colors()
 crimes = read_crimes()
 scaled(crimes, 950, 515)
 scaled(crimes_area, 950, 515)
-crimes_area['manhattan']['color'] = (194, 35, 38)
-crimes_area['queens']['color'] = (243, 115, 56)
-crimes_area['staten_island']['color'] = (253, 182, 50)
-crimes_area['brooklyn']['color'] = (128, 22, 56)
-crimes_area['bronx']['color'] = (2, 120, 120)
+crimes_area['manhattan']['color'] = color.get_rgb("firebrick")
+crimes_area['queens']['color'] = color.get_rgb("tomato")
+crimes_area['staten_island']['color'] = color.get_rgb("goldenrod")
+crimes_area['brooklyn']['color'] = color.get_rgb("brown")
+crimes_area['bronx']['color'] = color.get_rgb("teal")
 (width, height) = (1000, 1000)
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption('New York Crimes')
