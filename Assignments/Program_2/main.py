@@ -189,12 +189,10 @@ crimes_area['queens']['color'] = (243, 115, 56)
 crimes_area['staten_island']['color'] = (253, 182, 50)
 crimes_area['brooklyn']['color'] = (128, 22, 56)
 crimes_area['bronx']['color'] = (2, 120, 120)
-background_colour = (255, 255, 255)
-black = (0, 0, 0)
 (width, height) = (1000, 1000)
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption('New York Crimes')
-screen.fill(background_colour)
+screen.fill((255, 255, 255))
 pygame.display.flip()
 running = True
 while running:
