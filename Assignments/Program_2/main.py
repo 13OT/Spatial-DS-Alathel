@@ -1,7 +1,16 @@
-# Abdullah Alathel
-# CMPS 4553 Spatial Databases
-# Professor. Terry Griffin
-# 06/19/2017
+"""
+    Program:
+    --------
+        Program 2 - Crimes in New York
+
+    Description:
+    ------------
+        This program reads crime data from five files and plot them in (1000 x 1000) screen using pygame.
+        dad are read into two dictionaries one sorts crimes based on location, other on type
+
+    Name: Abdullah Alathel
+    Date: 18 June 2017
+"""
 import pygame
 import random
 import json
@@ -11,23 +20,19 @@ DIRPATH = os.path.abspath(
     os.path.join(os.path.dirname(__file__), '..', '..', '..', '4553-Spatial-DS', 'Resources'))
 
 
-def clean_area(screen, origin, width, height, color):
-    """
-    Prints a color rectangle (typically white) to "erase" an area on the screen.
-    Could be used to erase a small area, or the entire screen.
-    """
-    ox, oy = origin
-    points = [(ox, oy), (ox + width, oy), (ox + width,
-                                           oy + height), (ox, oy + height), (ox, oy)]
-    pygame.draw.polygon(screen, color, points, 0)
-
-
 class Colors (object):
     """
-    Opens a json file of web colors.
+           Opens a json file of web colors, and loads it into dictionary, to
+        return an rgb of a random color or given one.
+     Attributes:
+        get_random_color: Returns a random rgb tuple from the color dictionary.
+        get_rgb: Returns a named rgb tuple from the color dictionary.
     """
 
     def __init__(self, file_name=DIRPATH + '/Json_Files/colors.json'):
+        """
+        Opens a json file of web colors, and loads it into dictionary.
+        """
         with open(file_name, 'r') as content_file:
             content = content_file.read()
 
@@ -40,10 +45,12 @@ class Colors (object):
             None
         Returns:
             color (tuple) : (r,g,b)
-        Usage:
+            example:
+
             c = Colors()
             some_color = c.get_random_color()
-            # some_color is now a tuple (r,g,b) representing some lucky color
+
+            some_color is now a tuple (r,g,b) representing some lucky color
         """
         r = random.randint(0, len(self.content) - 1)
         c = self.content[r]
@@ -66,20 +73,19 @@ class Colors (object):
                 return (c['rgb'][0], c['rgb'][1], c['rgb'][2])
         return None
 
-    def __getitem__(self, color_name):
-        """
-        Overloads "[]" brackets for this class so we can treat it like a dict.
-        Usage:
-            c = Colors()
-            current_color = c['violet']
-            # current_color contains: (238,130,238)
-        """
-        return self.get_rgb(color_name)
-
 
 def scaled(crimes, width, height):
     """
-scale the x, y coordianets to the screen
+        scales the x and y coordiantes in given dictionary, given width and height
+        Args:
+            dictionary, width, and height
+        Returns:
+            None
+        Example:
+
+            scaled(Dictionary,Width,Height)
+
+            Dictionary now has the scaled coordinates
     """
     points = []
     for key in crimes.keys():
@@ -94,17 +100,28 @@ scale the x, y coordianets to the screen
         for i in crimes[key]['location']:
             x = int(width * ((i[0] - min_x) / ((max_x - min_x))))
             y = int(height * ((i[1] - min_y) / ((max_y - min_y))))
-            y = -y + 920
+            y = -y + 915
             lst.append(tuple((x, y)))
         crimes[key]['location'] = lst
 
 
+# intiliaize dictionary to store location by area
 crimes_area = {}
 
 
 def read_crimes():
     """
-read in the five files and store them in a dict (crimes)
+        Reads crime data from five different files with names in "crime_locations",
+        Args:
+            None
+        Returns:
+        Dictionary: crimes[Crime_Name] = {'location': [],
+                        'color': A random color, 'mbrs': []}
+        example:
+
+            Dictionary = read_crimes()
+
+            Dictionary in now a dictionary of crime names as keys
     """
     crimes = {}
     color = Colors()
@@ -184,9 +201,9 @@ while running:
     for key in crimes_area.keys():
         for p in crimes_area[key]['location']:
             pygame.draw.circle(screen, crimes_area[key]['color'], p, 2, 0)
+    pygame.image.save(screen, os.path.dirname(
+        __file__) + '/all_buroughs_screen_shot.png')
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            clean_area(screen, (0, 0), width, height, (255, 255, 255))
     pygame.display.flip()
