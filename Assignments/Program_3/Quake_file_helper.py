@@ -1,6 +1,4 @@
 import glob
-import os
-import sys
 import json
 
 
@@ -19,7 +17,7 @@ class FileHelper(object):
 
         self.files = glob.glob('quake-????.json')
 
-    def get_data(self, years=[],min_mag =7):
+    def get_data(self, years=[], min_mag=7):
         """
         Reads earth quake data, given a list of year(s), from json files on the computer that match query parameter,
         saves the data if magnitude is bigger than 7

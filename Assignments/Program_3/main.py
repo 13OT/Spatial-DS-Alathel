@@ -1,3 +1,8 @@
+from Quake_adjust_points import *
+from Quake_file_helper import *
+import pygame
+import os
+import json
 """
     Program:
     --------
@@ -12,13 +17,7 @@
     Name: Abdullah Alathel
     Date: 22 June 2017
 """
-from dbscan import *
-import json
-import sys
-from Quake_file_helper import FileHelper
-import pygame
-import os
-from Quake_adjust_points import *
+
 
 # initialize variables
 
@@ -58,21 +57,21 @@ pygame.display.flip()
 
 running = True
 while running:
-    #background image
+    # background image
     screen.blit(bg, (0, 0))
     for id in adjusted.keys():
-        #skip mbrs for now
+        # skip mbrs for now
         if id == 'mbr':
             continue
         for i in range(len(adjusted[id])):
             pygame.draw.circle(screen, (207, 83, 0), tuple(adjusted[id][i]), 2)
         # pygame.display.flip()
     for k in adjusted['mbr'].keys():
-        #skip extremes and unclustered points
+        # skip extremes and unclustered points
         if k == -1 or k == 'extremes':
             continue
         pygame.draw.polygon(screen, (159, 35, 35), adjusted['mbr'][k], 2)
-    #save a screenshot
+    # save a screenshot
     pygame.image.save(screen, os.path.dirname(
         __file__) + '/Earthquakes.png')
     for event in pygame.event.get():

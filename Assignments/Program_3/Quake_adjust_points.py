@@ -1,13 +1,8 @@
-import math
 from dbscan import *
-import json
-import sys
 from Quake_file_helper import FileHelper
-import pygame
-import os
 
 
-def calculate_mbrs(points, epsilon, min_pts, debug=False):
+def calculate_mbrs(points, epsilon, min_pts):
     """
             Call dbscan to find clusters, then calculated the mbr for each cluster
         Args:
@@ -122,7 +117,7 @@ def adjust_location_coords(extremes, points, width, height):
     return adjusted
 
 
-def convert_coordinates(dic, w, h,ep=25,m_p=15):
+def convert_coordinates(dic, w, h, ep=25, m_p=15):
     """
             Loop through read points to convert coordinates using mercX and mercY on each pair
             call adjust_location_coords to scale the converted coordinates
