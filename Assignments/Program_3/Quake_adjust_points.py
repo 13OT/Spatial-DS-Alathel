@@ -6,7 +6,8 @@ def calculate_mbrs(points, epsilon, min_pts):
     """
             Call dbscan to find clusters, then calculated the mbr for each cluster
         Args:
-            List: all the points, Int: minimum distance between points, Int: minimum points to consider a cluster
+            List: all the points, Int: minimum distance between points, 
+            Int: minimum points to consider a cluster
         Returns:
             Dictionary: mbr[Cluster] = [(x,y),...,]
         example:
@@ -85,16 +86,18 @@ def adjust_location_coords(extremes, points, width, height):
     """
             Adjust points data to fit in the screen. 
         Args:
-            Dictionary: extreme (x,y) values, Dictionary: points, Int: width of screen, Int: height of screen
+            Dictionary: extreme (x,y) values, Dictionary: points,
+            Int: width of screen, Int: height of screen
         Returns:
             Dictionary with adjusted coordinates
             = {'1960':[(x,y),...,],'1961':[(x,y),...,],...,}
         example:
-            Adjusted = adjust_location_coords({max_x: 1,...,},{'1960':[(x,y),...,],...,},1024,512)
+            Adjusted = adjust_location_coords({max_x: 1,...,}
+                ,{'1960':[(x,y),...,],...,},1024,512)
             Adjusted now is a dictionary of scaled to the screen x, and y values
     """
 
-    maxx = float(extremes['max_x'])  # The max coords from bounding rectangles
+    maxx = float(extremes['max_x'])
     minx = float(extremes['min_x'])
     maxy = float(extremes['max_y'])
     miny = float(extremes['min_y'])
@@ -119,14 +122,17 @@ def adjust_location_coords(extremes, points, width, height):
 
 def convert_coordinates(dic, w, h, ep=25, m_p=15):
     """
-            Loop through read points to convert coordinates using mercX and mercY on each pair
+            Loop through read points to convert coordinates using mercX,
+            and mercY on each pair
             call adjust_location_coords to scale the converted coordinates
             calculate mbrs for the clusters
         Args:
-            Dictionary: points to be converted, Int: width of screen, Int: height of screen
+            Dictionary: points to be converted, Int: width of screen, 
+            Int: height of screen
         Returns:
             Dictionary with adjusted coordinates
-            {'1960':[(x,y),...,],'1961':[(x,y),...,],...,'mbr':{'-1':[(x,y),...,],...,}
+            {'1960':[(x,y),...,],'1961':[(x,y),...,],...,
+                'mbr':{'-1':[(x,y),...,],...,}
         example:
             Adjusted = convert_coordinates(data,screen_width,screen_height)
             Adjusted now is a dictionary of scaled to the screen x, and y values

@@ -11,10 +11,12 @@ import time
 
     Description:
     ------------
-        This program reads earth quakes data from seperate .json files to, scale the points, and
-        calculates MBR for each cluster of points, then prints them in (unsorted) .josn file named "Big_Quakes.json",
+        This program reads earth quakes data from seperate .json files 
+        to, scale the points, and calculates MBR for each cluster of points, 
+        then prints them in (unsorted) .josn file named "Big_Quakes.json",
         and draws them on (1024 x 512) window using pygame.
-        The program now runs an animation loop by displaying earth quakes from oldest to earliest
+        The program now runs an animation loop by displaying earth quakes 
+        from oldest to earliest
 
     Name: Abdullah Alathel
     Date: 22 June 2017
@@ -42,7 +44,8 @@ adjusted = convert_coordinates(
 # write file
 
 f = open((os.path.dirname(__file__) + '\Big_Quakes.json'), 'w')
-f.write(json.dumps(adjusted, sort_keys=False, indent=4, separators=(',', ': ')))
+f.write(json.dumps(adjusted, sort_keys=False, indent=4,
+                   separators=(',', ': ')))
 f.close()
 
 # initialize pygame and its variables
@@ -50,7 +53,6 @@ f.close()
 pygame.init()
 bg = pygame.image.load(os.path.dirname(
     __file__) + '\World_map.png')
-
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption('Quakes with magnitude of 7 or greater')
 screen.fill(background_colour)
@@ -64,13 +66,14 @@ while running:
     screen.blit(bg, (0, 0))
 
     for id in adjusted.keys():
-         # skip mbrs
 
+        # skip mbrs
         if id == 'mbr':
             continue
 
         for i in range(len(adjusted[id])):
-            pygame.draw.circle(screen, (207, 83, 0), tuple(adjusted[id][i]), 2)
+            pygame.draw.circle(screen, (207, 83, 0),
+                               tuple(adjusted[id][i]), 2)
 
         pygame.display.flip()
         time.sleep(0.5)
