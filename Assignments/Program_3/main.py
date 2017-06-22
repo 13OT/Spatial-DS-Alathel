@@ -56,7 +56,7 @@ pygame.display.set_caption('Quakes with magnitude of 7 or greater')
 screen.fill(background_colour)
 pygame.display.flip()
 
-#read images from saved screenshots in previous run for animation Line:81
+#read images from saved screenshots in previous run for animation Line:82
 imgs=[]
 for i in range(59):
     imgs.append(pygame.image.load(os.path.dirname(__file__) +'/animation'+('/image'+str(i)+'.png')))
