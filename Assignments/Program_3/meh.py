@@ -50,11 +50,16 @@ f.close()
 pygame.init()
 bg = pygame.image.load(os.path.dirname(
     __file__) + '\World_map.png')
-
+    
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption('Quakes with magnitude of 7 or greater')
 screen.fill(background_colour)
 pygame.display.flip()
+
+#read images from saved screenshots in previous run for animation Line:82
+imgs=[]
+for i in range(59):
+    imgs.append(pygame.image.load(os.path.dirname(__file__) +'/animation'+('/image'+str(i)+'.png')))
 
 # main loop
 
@@ -62,9 +67,10 @@ running = True
 while running:
     # background image
     screen.blit(bg, (0, 0))
+    #img=0 for animation
 
     for id in adjusted.keys():
-         # skip mbrs
+         #skip mbrs
 
         if id == 'mbr':
             continue
@@ -94,6 +100,6 @@ while running:
 
         if event.type == pygame.QUIT:
             running = False
-
+            
     time.sleep(5)
     pygame.display.flip()
