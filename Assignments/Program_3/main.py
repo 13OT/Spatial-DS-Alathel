@@ -66,7 +66,7 @@ for i in range(59):
 running = True
 while running:
     # background image
-    screen.blit(bg, (0, 0))
+    #screen.blit(bg, (0, 0))
     #img=0 for animation
     #for id in adjusted.keys():
          #skip mbrs
