@@ -3,6 +3,7 @@ from Quake_file_helper import *
 import pygame
 import os
 import json
+import time
 """
     Program:
     --------
@@ -11,8 +12,9 @@ import json
     Description:
     ------------
         This program reads earth quakes data from seperate .json files to, scale the points, and
-        calculates MBR for each cluster of points, then prints them in .josn file named "Big_Quakes.json",
-        and draws them on (1024 x 512) screen using pygame.
+        calculates MBR for each cluster of points, then prints them in (unsorted) .josn file named "Big_Quakes.json",
+        and draws them on (1024 x 512) window using pygame.
+        The program now runs an animation loop by displaying earth quakes from oldest to earliest
 
     Name: Abdullah Alathel
     Date: 22 June 2017
@@ -27,7 +29,7 @@ min_pts = 15
 screen_width = 1024
 screen_height = 512
 background_colour = (255, 255, 255)
-(width, height) = (1026, 514)
+(width, height) = (1024, 512)
 black = (0, 0, 0)
 
 # get and convert coordinates
@@ -43,15 +45,21 @@ f = open((os.path.dirname(__file__) + '\Big_Quakes.json'), 'w')
 f.write(json.dumps(adjusted, sort_keys=False, indent=4, separators=(',', ': ')))
 f.close()
 
-# initialize pygame
+# initialize pygame and its variables
 
 pygame.init()
 bg = pygame.image.load(os.path.dirname(
     __file__) + '\World_map.png')
+    
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption('Quakes with magnitude of 7 or greater')
 screen.fill(background_colour)
 pygame.display.flip()
+
+#read images from saved screenshots in previous run for animation Line:81
+imgs=[]
+for i in range(59):
+    imgs.append(pygame.image.load(os.path.dirname(__file__) +'/animation'+('/image'+str(i)+'.png')))
 
 # main loop
 
@@ -59,22 +67,31 @@ running = True
 while running:
     # background image
     screen.blit(bg, (0, 0))
-    for id in adjusted.keys():
-        # skip mbrs for now
-        if id == 'mbr':
-            continue
-        for i in range(len(adjusted[id])):
-            pygame.draw.circle(screen, (207, 83, 0), tuple(adjusted[id][i]), 2)
-        # pygame.display.flip()
-    for k in adjusted['mbr'].keys():
+    #img=0 for animation
+    #for id in adjusted.keys():
+         #skip mbrs
+        #if id == 'mbr':
+            #continue
+    for img in imgs:
+        screen.fill((255, 255, 255))
+        screen.blit((img), (0, 0))
+        time.sleep(0.3)   
+        pygame.display.flip()
+        #for i in range(len(adjusted[id])):
+            #pygame.draw.circle(screen, (207, 83, 0), tuple(adjusted[id][i]), 2)
+        #pygame.image.save(screen,(os.path.dirname(__file__) +'/animation'+('/image'+str(img)+'.png'))) for animation
+        #img+=1 for animation
+    #for k in adjusted['mbr'].keys():
         # skip extremes and unclustered points
-        if k == -1 or k == 'extremes':
-            continue
-        pygame.draw.polygon(screen, (159, 35, 35), adjusted['mbr'][k], 2)
+        #if k == -1 or k == 'extremes':
+            #continue
+        #pygame.draw.polygon(screen, (159, 35, 35), adjusted['mbr'][k], 2)
     # save a screenshot
-    pygame.image.save(screen, os.path.dirname(
-        __file__) + '/Earthquakes.png')
+    #pygame.image.save(screen, os.path.dirname(
+    #    __file__) + '/screen_shot.png')
     for event in pygame.event.get():
+
         if event.type == pygame.QUIT:
             running = False
+    time.sleep(5)
     pygame.display.flip()
