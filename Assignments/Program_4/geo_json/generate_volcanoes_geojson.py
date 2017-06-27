@@ -40,7 +40,7 @@ DIRPATH = os.path.abspath(
 f = open(DIRPATH,'r')
 data = f.read()
 f.close()
-geo_json = volcanoes_geojson(json.loads(data))
+geo_json = volcanoes_geojson(json.loads(data),1000)
 f = open(os.path.abspath(os.path.join(os.path.dirname(__file__),'volcanoes.geojson')),"w")
 f.write(json.dumps(geo_json, sort_keys=False,indent=2, separators=(',', ': ')))
 f.close()
