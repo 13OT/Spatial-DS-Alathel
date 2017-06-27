@@ -76,7 +76,7 @@ while running:
                                tuple(adjusted[id][i]), 2)
 
         pygame.display.flip()
-        time.sleep(0.5)
+        time.sleep(0.2)
     pygame.display.flip()
 
     for k in adjusted['mbr'].keys():

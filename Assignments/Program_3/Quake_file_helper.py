@@ -1,6 +1,6 @@
 import glob
 import json
-
+import os,sys
 
 class FileHelper(object):
     """
@@ -19,7 +19,7 @@ class FileHelper(object):
 
     def __init__(self):
 
-        self.files = glob.glob('quake-????.json')
+        self.files = glob.iglob(os.path.dirname(__file__)+'/**/quake-????.json')
 
     def get_data(self, years=[], min_mag=7):
         """
@@ -40,7 +40,9 @@ class FileHelper(object):
         mag_data = {}
 
         for file in self.files:
-            fyear = file.split('-')
+            temp=file.split("\\")
+            fyear = temp[8]
+            fyear = fyear.split('-')
             fyear = fyear[1].split('.')
             fyear = int(fyear[0])
 

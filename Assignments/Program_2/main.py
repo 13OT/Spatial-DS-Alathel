@@ -16,8 +16,7 @@ import random
 import json
 import os
 
-DIRPATH = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), '..', '..', '..', '4553-Spatial-DS', 'Resources'))
+DIRPATH = os.path.abspath(os.path.dirname(__file__))
 
 
 class Colors (object):
@@ -133,7 +132,7 @@ def read_crimes():
 
     for crime_place in crime_locations:
         crimes_area[crime_place] = {'location': [], 'color': None}
-        with open(DIRPATH + '/NYPD_CrimeData/filtered_crimes_' + crime_place + '.csv') as f:
+        with open(DIRPATH + '/Crimes/' + crime_place + '.csv') as f:
             for line in f:
                 line = ''.join(x if i % 2 == 0 else x.replace(',', ':')
                                for i, x in enumerate(line.split('"')))
