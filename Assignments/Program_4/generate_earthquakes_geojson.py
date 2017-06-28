@@ -43,6 +43,6 @@ data = f.read()
 f.close()
 geo_json = earthquakes_geojson(json.loads(data), 1000)
 f = open(os.path.abspath(os.path.join(
-    os.path.dirname(__file__), 'earthquakes.geojson')), "w")
+    os.path.dirname(__file__),'geo_json', 'earthquakes.geojson')), "w")
 f.write(json.dumps(geo_json, sort_keys=False, indent=2, separators=(',', ': ')))
 f.close()
