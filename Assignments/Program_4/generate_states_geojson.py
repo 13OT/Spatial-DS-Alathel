@@ -9,6 +9,7 @@ DIRPATH = os.path.abspath(os.path.dirname(__file__))
 
 
 def states_geojson(data, limit=None):
+    
     feature_list = []
 
     for state in data:
