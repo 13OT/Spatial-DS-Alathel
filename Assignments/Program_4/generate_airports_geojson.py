@@ -8,6 +8,16 @@ DIRPATH = os.path.abspath(os.path.dirname(__file__))
 
 
 def airports_geojson(data, limit=None):
+    """
+        Reads the airports.json file and and return it as geojson
+        Args:
+            Dictionary of a json file, and wanted list size
+        Returns:
+            A list of dictionaries of wanted size if given, or reads the whole file
+        Usage:
+             l = airports_geojson(data) or = airports_geojson(data,1000)
+             l=[{},{},...,]
+    """
 
     feature_list = []
 
