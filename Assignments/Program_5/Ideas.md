@@ -1,3 +1,3 @@
-1. Enter 
-2. 
-3. 
+1. Click on two cities (first click: starting point, second click: destination ), then show airport route(using international airports if necessary), and map all volcanoes in a given radius to destination  
+2. Click a point and show a list of the worst earthquakes (by magnitude), and a list of active volcanoes in a given radius.  
+3. Enter a city name, to show a "calculated danger percentage" based on how often natural disasters ( hurricanes, tsunamis, earthquakes,...,) happen.
