@@ -24,6 +24,9 @@ class MongoHelper(object):
         res = self.client['world_data'][collection].find( { 'geometry': { '$geoWithin': { '$centerSphere': [ [x, y ] , radius/earth_radius ] } }} )
         
         return self._make_result_list(res)
+    def get_airport_name(self,val):
+        res = self.client['world_data']['airports'].find_one({'properties.ap_iata' : val},{'_id':0})
+        return res['properties']['city']
     def get_features_near(self,collection,point,field,value,min_max,radius,earth_radius=3963.2): #km = 6371
         """
         Finds "features" within some radius of a given point.
@@ -149,6 +152,7 @@ class MongoHelper(object):
     def get_all(self,collection,filter={},projection={'_id':0}):
         res = self.client['world_data'][collection].find(filter,projection)
         return self._make_result_list(res)
+
     
 
     def _haversine(self,lon1, lat1, lon2, lat2):

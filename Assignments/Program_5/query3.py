@@ -1,4 +1,29 @@
 
+"""
+Program:
+--------
+    Program 4 - Query Assignments - Query 3: Clustering
+    query3.py
+Description:
+------------
+    Use dbscan to find the top 3 clusters of volcanoes, earthquakes, and meteors, seperately, that satisfy the requirements.
+    Also, it will draw a bounding box around each cluster.
+    Example Usage may be:
+        python query3.py [feature] [min_pts] [eps]
+        
+        Feature = (volcano, earthquake, meteor) and
+        min_pts = minimum points to make a cluster, and
+        eps is the distance parameter for dbscan
+        python query3.py volcanoes 25 10
+        python query3.py all 25 10
+
+    An optional fourth parameter 'limit' can be passed to limit the points going in dbscan, the limit is applied to each feature points seperately.
+        python query3.py all 25 10 5000
+
+
+Name: Samuel Weems
+Date: 03 July 2017
+"""
 import os
 import sys
 import math
@@ -21,6 +46,7 @@ def calculate_mbrs(points, epsilon, min_pts):
             Call dbscan to find clusters, then calculated the mbr for each cluster
         Args:
             List: all the points, Int: minimum distance between points, 
+            Int: distance
             Int: minimum points to consider a cluster
         Returns:
             Dictionary: mbr[Cluster] = [(x,y),...,]

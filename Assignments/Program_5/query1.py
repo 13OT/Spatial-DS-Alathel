@@ -1,4 +1,19 @@
 
+
+"""
+Program:
+--------
+    Program 5 - Query Assignments - Query 1: Find Interesting Features along path:
+    query1.py
+Description:
+------------
+    This prgram reads in two points and a radius by entering airport codes via sys.argv 
+    (e.g. python query1.py DFW MNL 1000 to run query from Dallas  to Manilla Philippines with a 1000 mile radius to look for interesting features).
+    Highlight all features within R radius of the entire path by showing volcanos as red dots, earthquakes as blue dots, and meteor locations as green dots.
+    
+Name: Abdullah Alathel
+Date: 05 July 2017
+"""
 import os
 import sys
 import math
@@ -16,6 +31,15 @@ mf = MapFacade(2048, 1024)
 
 
 def interesting_features(f, t, r):
+    """
+             draws path and interesting feature along the way from origin to destenation      
+        Args:
+            f: string, t: string, r: float
+        Returns:
+            None. Draws path on map
+        example:
+            interesting_features('DFW', 'RUH', 1000)
+    """
 
     lines = []
     features = []
@@ -24,6 +48,7 @@ def interesting_features(f, t, r):
     mpoints = []
     i = 0
     to = mh.get_airport_coord(t.upper())
+    to_city=mh.get_airport_name(t.upper())
     loop = True
     from_ = mh.get_airport_coord(f.upper())
     lines.append(from_)
@@ -32,7 +57,7 @@ def interesting_features(f, t, r):
         near = mh.get_airport_near_me(lines[i], float(r))
         x, y = to
         for ap in near:
-            if ap['geometry']['coordinates'] == to:
+            if ap['properties']['city'] == to_city:
                 loop = False
             if ap['geometry']['coordinates'] in lines:
                 continue

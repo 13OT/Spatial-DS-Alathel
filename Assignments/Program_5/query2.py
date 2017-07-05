@@ -1,3 +1,34 @@
+"""
+Program:
+--------
+    Program 5 - Query Assignments - Query 2: Nearest Neighbor
+    query2.py
+Description:
+------------
+    This program will find features with a radius of a location, location can be inputed as a Click on the world map, or read from sys.argv, 
+    further filtering the queries is possible, where features are listed below:
+        Volcanos
+        Earthquakes
+        Meteors
+    Example queries may be:
+        python query2.py [feature] [field] [field value] [min/max] [max results] [radius] [lon,lat]
+            feature = volcano, earthquake, meteor
+            field = some field in the 'properties' to compare against
+            field_value = the value in wich to compare with
+            min/max = whether we want all results greater than or less than the field_value.
+            radius (in miles) = radius to apply our query with.
+            lon,lat (optional) = Some point coords to act as a mouse click instead of actually clicking the screen.
+    python query2.py volcanos altitude 3000 min 3 1000 
+    When the map is clicked it will find the 3 volcanos within a 1000 mile radius that are at a minumum of 3000 feet (if they exist at that location).
+    python query2.py earthquakes magnitude 5 min 0 2000 
+    When the map is clicked it will find ALL earthquakes (max results 0 = all) within a 2000 mile radius with a magnitude of 5 or more.
+    python query2.py 1000 
+    This query if run with a single parameter, it will assume it is a Radius and will find ALL of the above features within that radius
+    (Volcanos, Earthquakes, Meteors). 
+    It will show volcanos as red dots, earthquakes as blue dots, and meteor locations as green dots.
+Name: Abdullah Alathel
+Date: 05 July 2017
+"""
 import os
 import sys
 import math
@@ -135,6 +166,15 @@ class PygameHelper(object):
 
 
 def nearest_neighbors(feature, field, value, min_max, max_results, radius, lon_lat):
+    """
+            Finds a specific feature in a radius      
+        Args:
+            feature: string, field: string, value: float, min_max:string, max_results:int, radius:float, lon_lat:tuple
+        Returns:
+            None. Draws path on map
+        example:
+            nearest_neighbors(volcanoes, altitude, 3000, max, 0, 1000, (0,0))
+    """
     icon = map_icon('Centered', 'Azure', 16, '')
     fields = ['mag', 'Altitude']
     if field.strip(" ").lower() == 'magnitude':
@@ -163,6 +203,16 @@ def nearest_neighbors(feature, field, value, min_max, max_results, radius, lon_l
 
 
 def get_all(radius, point):
+    """
+            Finds all features in a radius      
+        Args:
+            radius: float, point: tuple
+        Returns:
+            None. Draws path on map
+        example:
+            get_all(5000,(0,0))
+    """
+    
     features = ['volcanoes', 'earthquakes', 'meteorites']
     res = {}
     points = {}
