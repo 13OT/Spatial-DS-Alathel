@@ -8,7 +8,7 @@
     5. meteorites
     6. states
     7. volcanoes 
-2. To run batc: .\load_mongo.sh or .\load_mongo.bat
+2. To run batch file: .\load_mongo.sh or .\load_mongo.bat (Note: geojson may need to be mango\bin)
 3. Example queries:
 
  * query 1 : note ( if radius is too small it will cause an infinite loop ) 
