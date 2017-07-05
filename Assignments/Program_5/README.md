@@ -22,7 +22,7 @@
     3. python query2.py 2000 
     4. python query2.py earthquakes magnitude 5 max 3 2500 (128.320313,46.111326) 
     
-* query 3 : note ( dbscan need time to proccess meteorites and earthquakes, can pass a limit to points passed to dbscan( as in ex. 4), default is 5000, if limit is too small it will not find clusters )
+* query 3 : note ( dbscan need time to proccess meteorites and earthquakes, can pass a limit to points passed to dbscan( as in ex. iv), default is 5000, if limit is too small it will not find clusters )
     1. python query3.py meteorites 20 25
     2. python query3.py volcanoes 40 30
     3. python query3.py all 70 25
