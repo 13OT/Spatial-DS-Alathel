@@ -1,5 +1,6 @@
 
-import os,sys
+import os
+import sys
 import math
 import pygame
 from pygame.locals import *
@@ -12,7 +13,8 @@ from dbscan import *
 
 
 mh = MongoHelper()
-mf = MapFacade(2048,1024)
+mf = MapFacade(2048, 1024)
+
 
 def calculate_mbrs(points, epsilon, min_pts):
     """
@@ -57,7 +59,7 @@ def calculate_mbrs(points, epsilon, min_pts):
     return mbrs
 
 
-def find_clusters(feature, m_p=15, ep=25,limit=None):
+def find_clusters(feature, m_p=15, ep=25, limit=None):
     """
             Loop through read points to convert coordinates using mercX,
             and mercY on each pair
@@ -79,113 +81,65 @@ def find_clusters(feature, m_p=15, ep=25,limit=None):
         limit = 5000
     else:
         limit = int(limit)
-    if feature.lower()=='all':
-        feature=['volcanoes','earthquakes','meteorites']
-    icons ={}
-    icons['volcanoes']=map_icon('Centered','Pink',16,'')
-    icons['earthquakes']=map_icon('Centered','Azure',16,'')
-    icons['meteorites']=map_icon('Centered','Chartreuse',16,'')
-    m_p=int(m_p)
-    ep=int(ep)
-    adj_mbrs={}
+    if feature.lower() == 'all':
+        feature = ['volcanoes', 'earthquakes', 'meteorites']
+    icons = {}
+    icons['volcanoes'] = map_icon('Centered', 'Pink', 16, '')
+    icons['earthquakes'] = map_icon('Centered', 'Azure', 16, '')
+    icons['meteorites'] = map_icon('Centered', 'Chartreuse', 16, '')
+    m_p = int(m_p)
+    ep = int(ep)
+    adj_mbrs = {}
     points = {}
-    adj={}
-    mbrs={}
-    features_list={}
+    adj = {}
+    mbrs = {}
+    features_list = {}
     allx = []
     ally = []
-    if isinstance(feature,str):
-        features_list[feature]= mh.get_all(feature)
+    if isinstance(feature, str):
+        features_list[feature] = mh.get_all(feature)
     else:
         for i in feature:
-            features_list[i]=mh.get_all(i)
-    for k,lst in features_list.items():
-        points[k]=[]
+            features_list[i] = mh.get_all(i)
+    for k, lst in features_list.items():
+        points[k] = []
         for f in lst:
             lon = f["geometry"]["coordinates"][0]
             lat = f["geometry"]["coordinates"][1]
-            if int(lon) ==0 and int(lat)==0:
+            if int(lon) == 0 and int(lat) == 0:
                 continue
             try:
                 points[k].append((float(lon), float(lat)))
             except:
                 continue
 
-    for k,l in points.items():
-        adj[k]=[]
+    for k, l in points.items():
+        adj[k] = []
         for p in l:
-            a=mf.adjust_point(p)
+            a = mf.adjust_point(p)
             if len(adj[k]) > limit:
                 break
             adj[k].append(a)
     for k in adj.keys():
         mbrs[k] = calculate_mbrs(adj[k], ep, m_p)
     for key in mbrs.keys():
-        adj_mbrs[key]=[]
+        adj_mbrs[key] = []
         for k in mbrs[key].keys():
             # skip extremes and unclustered points
             if k == -1 or k == 'extremes':
                 continue
-            if len(adj_mbrs[key])>=3:
+            if len(adj_mbrs[key]) >= 3:
                 break
             adj_mbrs[key].append(mbrs[key][k])
     for k in points.keys():
-        mf.pin_the_map(points[k],icons[k])
+        mf.pin_the_map(points[k], icons[k])
     for k in adj_mbrs.keys():
         mf.mbrs(adj_mbrs[k])
 
-# def interesting_features(f,t,r):
-#     lines=[]
-#     features=[]
-#     volpoints=[]
-#     eqpoints=[]
-#     mpoints=[]
-#     i = 0
-#     to = mh.get_airport_coord(t)
-#     loop = True
-#     from_ = mh.get_airport_coord(f)
-#     lines.append(from_)
-#     while loop:
-#         distance = 9999999
-#         near = mh.get_airport_near_me(lines[i],float(r))
-#         x,y = to
-#         for ap in near:
-#             if ap ['geometry']['coordinates'] == to:
-#                 loop = False
-#             if ap['geometry']['coordinates'] in lines:
-#                 continue
-#             x2,y2 = ap['geometry']['coordinates']
-#             d = mh._haversine(x,y,x2,y2)
-#             if d < distance:
-#                 distance =d
-#                 nearst = ap
-#         lines.append(nearst['geometry']['coordinates'])
-#         i = i+1
-#     for p in lines:
-#         result=mh.get_features_near_me('meteorites',p,float(r))
-#         for rs in result:
-#             if rs not in mpoints:
-#                 mpoints.append(tuple((rs['geometry']['coordinates'][0],rs['geometry']['coordinates'][1])))            
-#         result=mh.get_features_near_me('volcanoes',p,float(r))
-#         for rs in result:
-#             if rs not in volpoints:
-#                 volpoints.append(tuple((rs['geometry']['coordinates'][0],rs['geometry']['coordinates'][1])))            
-#         result=mh.get_features_near_me('earthquakes',p,float(r))
-#         for rs in result:
-#             if rs not in eqpoints:
-#                 eqpoints.append(tuple((rs['geometry']['coordinates'][0],rs['geometry']['coordinates'][1])))            
-#     adj=[]
-#     for p in lines:
-#         a=mf.adjust_point(p)
-#         adj.append(a)
-#     mf.lines(adj)
-#     mf.pin_the_map(eqpoints, map_icon('Centered','Chartreuse',32,''))
-#     mf.pin_the_map(volpoints, map_icon('Centered','Pink',32,''))
-#     mf.pin_the_map(mpoints, map_icon('Centered','Azure',32,''))
 
 mf.draw_all_countries(1)
-if len(sys.argv)==4:
-    find_clusters(sys.argv[1],sys.argv[2],sys.argv[3])
+if len(sys.argv) == 4:
+    find_clusters(sys.argv[1], sys.argv[2], sys.argv[3])
 else:
-    find_clusters(sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4])
+    find_clusters(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
 mf.run()
