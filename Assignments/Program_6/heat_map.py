@@ -5,7 +5,8 @@ Program:
 
 Description:
 ------------
-    Generate a heat style map showing terrorist hotspots around the world. by reading a json file of terrorism information, then display it using pygame
+    Generate a heat style map showing terrorist hotspots around the world. 
+    by reading a json file of terrorism information, then display it using pygame
     
 Name: Abdullah Alathel
 Date: 7 July 2017
@@ -30,15 +31,15 @@ class heat_map(object):
         mercY: returns the adjusted latitude
         run: creates a pygame instace to show the map and display the points
     """
-    def __init__(self,width = 1024,height=512):
+
+    def __init__(self, width=1024, height=512):
         """Inits SampleClass with width, and height."""
-        self.width=width
+        self.width = width
         self.height = height
         self.coordinates = {}
         self.min = None
         self.max = None
         self.count = []
-        self.DIRPATH = os.path.abspath(os.path.dirname(__file__))
         self.screen = None
         self.bg = None
 
@@ -55,7 +56,6 @@ class heat_map(object):
                 self.count.append(self.coordinates[k]['count'])
         self.max = max(self.count)
         self.min = min(self.count)
-
 
     def get_radius(self, x):
         """ returns radius based on given count"""
@@ -96,7 +96,8 @@ class heat_map(object):
                 pygame.draw.circle(self.screen, self.get_color(self.coordinates[k]['count']), self.coordinates[k]['loc'], int(
                     self.get_radius(self.coordinates[k]['count'])), self.get_width(self.coordinates[k]['count']))
             pygame.display.flip()
-            pygame.image.save(self.screen, os.path.dirname( __file__) + '/screen_shot.png')
+            pygame.image.save(self.screen, os.path.dirname(
+                __file__) + '/screen_shot.png')
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -117,6 +118,7 @@ class heat_map(object):
         b = math.tan(math.pi / 4 + lat / 2)
         c = math.pi - math.log(b)
         return int(((a * c) / 512 * 512 - (512 / 2)))
+
 
 f = open(os.path.abspath(os.path.join(
     os.path.dirname(__file__), 'attacks.json')), 'r')
