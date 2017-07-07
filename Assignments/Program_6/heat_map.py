@@ -37,7 +37,7 @@ class heat_map(object):
         """Inits heat_map with width, and height."""
         self.width = width
         self.height = height
-        self.grid=[]
+        self.grid = []
         self.min = None
         self.max = None
         self.count = []
@@ -47,15 +47,16 @@ class heat_map(object):
 
     def create_grid(self):
         """cread a grid to display data"""
-        for x in range ( self.width ):
-            self.grid.append ( [0 for x in range ( self.height )] )
+        for x in range(self.width):
+            self.grid.append([0 for x in range(self.height)])
 
     def read_data(self, data):
         """Reads the data and store it in dictionary"""
         for country, lst in data.items():
             for key, val in lst.items():
                 self.count.append(val['count'])
-                self.grid[self.mercX( val['geometry']['coordinates'][0])][self.mercY( val['geometry']['coordinates'][1])] += val['count']
+                self.grid[self.mercX(val['geometry']['coordinates'][0])][self.mercY(
+                    val['geometry']['coordinates'][1])] += val['count']
         self.max = max(self.count)
         self.min = min(self.count)
 
@@ -96,11 +97,11 @@ class heat_map(object):
         running = True
         while running:
             self.screen.blit(self.bg, (0, 0))
-            for i in range ( len ( self.grid ) ):
-                for z in range ( len ( self.grid[i] ) ):
+            for i in range(len(self.grid)):
+                for z in range(len(self.grid[i])):
                     if self.grid[i][z]:
-                        pygame.draw.circle ( self.screen, self.get_color ( self.grid[i][z] ), (int ( i ), int ( z )),
-                                     int ( self.get_radius ( self.grid[i][z] ) ), self.get_width ( self.grid[i][z] ) )
+                        pygame.draw.circle(self.screen, self.get_color(self.grid[i][z]), (int(i), int(z)),
+                                           int(self.get_radius(self.grid[i][z])), self.get_width(self.grid[i][z]))
 
             pygame.display.flip()
             pygame.image.save(self.screen, os.path.dirname(
