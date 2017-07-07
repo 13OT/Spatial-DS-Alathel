@@ -33,7 +33,7 @@ class heat_map(object):
     """
 
     def __init__(self, width=1024, height=512):
-        """Inits SampleClass with width, and height."""
+        """Inits heat_map with width, and height."""
         self.width = width
         self.height = height
         self.coordinates = {}
