@@ -23,6 +23,7 @@ class heat_map(object):
     """Reads data from json file to create a hate map of terrorism information.
 
     Attributes:
+        create_grid: crates a 2D grid to display data
         read_data: reads the json file to extract coordinates and counts of terror
         get_radius: returns the radius of a circle based on given count
         get_width: returns the width of a circle based on given count
@@ -36,24 +37,25 @@ class heat_map(object):
         """Inits heat_map with width, and height."""
         self.width = width
         self.height = height
-        self.coordinates = {}
+        self.grid=[]
         self.min = None
         self.max = None
         self.count = []
         self.screen = None
         self.bg = None
+        self.create_grid()
+
+    def create_grid(self):
+        """cread a grid to display data"""
+        for x in range ( self.width ):
+            self.grid.append ( [0 for x in range ( self.height )] )
 
     def read_data(self, data):
         """Reads the data and store it in dictionary"""
-        x = []
-        y = []
         for country, lst in data.items():
             for key, val in lst.items():
-                self.coordinates[key] = {'count': val['count'], 'loc': tuple((self.mercX(
-                    val['geometry']['coordinates'][0]), self.mercY(val['geometry']['coordinates'][1])))}
-        for k in self.coordinates.keys():
-            if self.coordinates[k]['count'] not in self.count:
-                self.count.append(self.coordinates[k]['count'])
+                self.count.append(val['count'])
+                self.grid[self.mercX( val['geometry']['coordinates'][0])][self.mercY( val['geometry']['coordinates'][1])] += val['count']
         self.max = max(self.count)
         self.min = min(self.count)
 
@@ -69,6 +71,8 @@ class heat_map(object):
         """returns color based on given count"""
         EPSILON = sys.float_info.epsilon  # smallest possible difference
         minval, maxval = self.min, self.max
+        if count > self.max:
+            count = self.max
         steps = 26
         delta = float(maxval - minval) / steps
         colors = [(0, 0, 255), (0, 255, 0), (255, 0, 0)]  # [BLUE, GREEN, RED]
@@ -92,9 +96,12 @@ class heat_map(object):
         running = True
         while running:
             self.screen.blit(self.bg, (0, 0))
-            for k in self.coordinates.keys():
-                pygame.draw.circle(self.screen, self.get_color(self.coordinates[k]['count']), self.coordinates[k]['loc'], int(
-                    self.get_radius(self.coordinates[k]['count'])), self.get_width(self.coordinates[k]['count']))
+            for i in range ( len ( self.grid ) ):
+                for z in range ( len ( self.grid[i] ) ):
+                    if self.grid[i][z]:
+                        pygame.draw.circle ( self.screen, self.get_color ( self.grid[i][z] ), (int ( i ), int ( z )),
+                                     int ( self.get_radius ( self.grid[i][z] ) ), self.get_width ( self.grid[i][z] ) )
+
             pygame.display.flip()
             pygame.image.save(self.screen, os.path.dirname(
                 __file__) + '/screen_shot.png')
